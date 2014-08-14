@@ -1,0 +1,4 @@
+name = Teamwork Blocks
+description = This module adds several custom blocks from teamwork data
+core = 7.x
+version = 1.0

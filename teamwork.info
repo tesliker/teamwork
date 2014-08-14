@@ -1,0 +1,4 @@
+name = teamwork
+description = This module allows talk between team work and drupal
+core = 7.x
+version = 1.0

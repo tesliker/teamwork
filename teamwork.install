@@ -1,0 +1,332 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function teamwork_schema() {
+$schema['teamwork_api'] = array(
+  'description' => 'The API key',
+  'fields' => array(
+    'api_key' => array(
+      'description' => 'Teamwork API key',
+      'type' => 'varchar',
+      'length' => 256,
+      'not null' => TRUE,
+    ),
+    'company_name' => array(
+      'description' => 'The Company Name',
+      'type' => 'varchar',
+      'length' => 256,
+      'not null' => TRUE,
+    ),
+    'uid' => array(
+      'description' => 'The unique user id',
+      'type' => 'int',
+      'length' => 3,
+      'not null' => TRUE,
+	  'default' => 1,
+    ),
+  ),
+);
+$schema['teamwork_people'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'uid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'first_name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => TRUE,
+    ),
+    'last_name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => TRUE,
+    ),
+    'email' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => 64,
+      'not null' => TRUE,
+    ),
+    'user_name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => TRUE,
+    ),
+    'avatar_url' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => TRUE,
+    ),
+  ),
+);
+$schema['teamwork_tasks'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'uid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'comments_count' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'description' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '5000',
+      'not null' => FALSE,
+    ),
+    'content' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '5000',
+      'not null' => FALSE,
+    ),
+    'private' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'order' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+	  'length' => '32',
+      'not null' => FALSE,
+    ),
+    'project_id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'project_name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'todo_list_id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'todo_list_name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'status' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+    'company_name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'company_id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'creator_id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'creator_firstname' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+    'creator_lastname' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+    'completed' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+    'start_date' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+	  'length' => '128',
+      'not null' => FALSE,
+    ),
+    'due_date' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+	  'length' => '32',
+      'not null' => FALSE,
+    ),
+    'created_on' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+    'priority' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+    'progress' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'timeIsLogged' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+    'attachments_count' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'responsible_party_id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+	  'length' => '32',
+      'not null' => FALSE,
+    ),
+    'responsible_party_firstname' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+    'responsible_party_lastname' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '32',
+      'not null' => FALSE,
+    ),
+  ),
+);
+
+
+$schema['teamwork_tasklists'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'uid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'project_id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+	  'length' => '128',
+      'not null' => FALSE,
+    ),
+    'description' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+	  'length' => '5000',
+      'not null' => FALSE,
+    ),
+    'milestone_id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+	  'length' => '128',
+      'not null' => FALSE,
+    ),
+    'uncompleted_count' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'complete' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'private' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'overdue_count' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'project_name' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '128',
+      'not null' => FALSE,
+    ),
+    'pinned' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'not null' => FALSE,
+	  'length' => '128',
+    ),
+    'tracked' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'not null' => FALSE,
+	  'length' => '128',
+    ),
+    'id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'position' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+    'completed_count' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => FALSE,
+    ),
+  ),
+);
+
+
+  return $schema;
+}

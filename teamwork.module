@@ -1,0 +1,288 @@
+<?php
+/**
+ * @file
+ * Teamwork primary module file.
+ */
+/**
+ * Implements hook_menu().
+ */
+function teamwork_menu() {
+  $items['admin/config/services/teamwork'] = array(
+    'title' => 'Teamwork',
+    'description' => 'Configure settings for the Teamwork API.',
+    'page callback' => 'teamwork_admin_page',
+    'access arguments' => array(
+      'administer teamwork'
+    ) ,
+  );
+  $items['admin/config/services/teamwork/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'access arguments' => array(
+      'administer teamwork'
+    ) ,
+    'weight' => 10,
+  );
+  $items['admin/config/services/teamwork/addtask'] = array(
+    'title' => 'Add a Task',
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'teamwork_add_task',
+    'access arguments' => array(
+      'administer teamwork'
+    ) ,
+  );
+  $items['admin/config/services/teamwork/refresh'] = array(
+    'title' => 'Refresh Teamwork Sync',
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'teamwork_refresh',
+    'access arguments' => array(
+      'administer teamwork'
+    ) ,
+  );
+  return $items;
+}
+
+
+
+function teamwork_permission() {
+  return array(
+    'administer teamwork' => array(
+      'title' => t('Administer Teamwork') ,
+      'description' => t('Perform administration tasks for Teamwork') ,
+    ) ,
+  );
+}
+/*
+* Page callback to menu item to add a task.
+*/
+function teamwork_admin_page() {
+  $build['teamwork_admin_form'] = array(
+    'teamwork_admin_page' => drupal_get_form('teamwork_admin_form') ,
+  );
+  return $build;
+}
+
+
+
+function teamwork_admin_form ($form, &$form_state) {
+  //$teamwork_schema = drupal_get_schema('teamwork_api');
+  global $user;
+  $api_key = db_query('SELECT api_key FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
+  $company_name = db_query('SELECT company_name FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
+  $form = array();
+  $form['teamwork_settings_markup'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div>
+	<h3>You need to get your API key from teamwork in order for this module to work</h3>
+	<p>You can go to <a target="_blank" href="http://developer.teamwork.com/enabletheapiandgetyourkey">http://developer.teamwork.com/enabletheapiandgetyourkey</a> for more information</p>
+	</div>
+	',
+  );
+  $form['teamwork_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Please enter your Team Work API Key') ,
+    '#description' => t("The maximum number of links to display in the block.") ,
+    '#default_value' => $api_key,
+    '#required' => FALSE,
+  );
+  $form['company_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Please enter your Company Name') ,
+    '#description' => t("The maximum number of links to display in the block.") ,
+    '#default_value' => $company_name,
+    '#required' => FALSE,
+  );
+  $form['teamwork_admin_form_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+function teamwork_admin_form_submit($form, &$form_state) {
+    global $user;
+    $api_key = db_query('SELECT api_key FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
+    $company_name = db_query('SELECT company_name FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
+    if(empty($api_key)) {
+		drupal_set_message('Your API key and company name have been successfully added.');
+        $result = db_insert('teamwork_api') // Table name no longer needs {}
+            ->fields(array(
+                'api_key' => $form_state['values']['teamwork_key'],
+                'company_name' => $form_state['values']['company_name'],
+                'uid' => $user->uid,
+            ))
+            ->execute();
+        return $result;
+    }
+    else {
+		drupal_set_message('Your API key and company name have been successfully updated.');
+        $result = db_update('teamwork_api') // Table name no longer needs {}
+            ->fields(array(
+                'api_key' => $form_state['values']['teamwork_key'],
+                'company_name' => $form_state['values']['company_name'],
+                'uid' => $user->uid,
+            ))
+            ->execute();
+        return $result;
+    }
+}
+
+function _teamwork_options($table, $value, $option, $_option) {
+global $user;
+$result = db_query('SELECT * FROM {'.$table.'} WHERE uid = :uid', array(':uid' => $user->uid))->fetchAll(PDO::FETCH_ASSOC);
+$select_options = array();
+foreach($result as $listitem) {
+    $select_options[$listitem[$value]] = $listitem[$option].' '.$listitem[$_option];
+}
+  //    $return = drupal_map_assoc($return);
+
+return $select_options;
+}
+
+function teamwork_form($form, &$form_state) {
+  $form['add_a_task'] = array(
+    '#title' => t('Add a Task') ,
+    '#type' => 'vertical_tabs',   
+  );
+  $form['who_and_when'] = array(
+    '#title' => t('Who and When') ,
+    '#type' => 'fieldset',
+	'#group' => 'add_a_task',
+    '#collapsible' => TRUE,	
+  );
+  $form['who_and_when']['people'] = array(
+    '#title' => t('Who should do this?') ,
+    '#type' => 'select',
+    '#required' => TRUE,
+	'#collapsible' => TRUE,	
+	'#group' => 'add_a_task',
+    '#options' => _teamwork_options(teamwork_people, id, first_name, last_name),
+  );
+    $form['who_and_when']['date'] = array(
+    '#title' => t('Due Date') ,
+    '#type' => 'date',
+    '#required' => TRUE,
+	'#collapsible' => TRUE,	
+	'#group' => 'add_a_task',
+  );
+  
+  $form['who_and_when']['tasklist'] = array(
+    '#title' => t('Task List') ,
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#description' => t('which tasklist?') ,
+    '#options' => _teamwork_options(teamwork_tasklists, id, name, ' '),
+  );
+
+  $form['todo'] = array(
+    '#title' => t('To-Do') ,
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#description' => t('This is your task') ,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+function teamwork_refresh_form($form, &$form_state) {
+  $form['refresh'] = array(
+    '#type' => 'checkbox',
+	'#title' => 'Refresh',
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Refresh',
+  );
+  return $form;
+}
+
+function teamwork_refresh_form_validate($form, &$form_state) {
+}
+
+
+function teamwork_refresh_form_submit($form, &$form_state) {
+module_load_include('inc', 'teamwork');
+teamwork_people_refresh('people.json');
+teamwork_tasklists_refresh('tasklists.json');
+teamwork_tasks_refresh('tasks.json');
+}
+
+/*
+* Page callback to menu item to add a task.
+*/
+function teamwork_add_task() {
+  $build['teamwork_add_tasks'] = array(
+    'teamwork_page_form' => drupal_get_form('teamwork_form') ,
+  );
+  return $build;
+}
+
+
+/*
+* Page callback to menu item to add a task.
+*/
+function teamwork_refresh() {
+  $build['teamwork_refresh'] = array(
+    'teamwork_page_refresh_form' => drupal_get_form('teamwork_refresh_form') ,
+  );
+  return $build;
+}
+
+
+
+
+/*
+* Implements form_validate
+*/
+
+function teamwork_form_validate($form, &$form_state) {
+}
+
+function teamwork_admin_form_validate() {
+}
+/*
+* Implements form_submit
+*/
+
+function teamwork_form_submit($form, &$form_state) {
+global $user;
+  $key = db_query('SELECT api_key FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
+  $company = db_query('SELECT company_name FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
+
+
+  $task_list_id = $form_state['values']['tasklist'];
+  // $taskName = t("I like @color too!", array('@color' => $form_state['values']['color']));
+  $task_name = $form_state['values']['todo'];
+  $task_list_people_id = $form_state['values']['people'];
+  $task_date = $form_state['values']['date']['year'] . sprintf('%02d', $form_state['values']['date']['month']) . sprintf('%02d', $form_state['values']['date']['day']);
+  $arr = array(
+    'todo-item' => array(
+      'content' => $task_name,
+      'responsible-party-id' => $task_list_people_id,
+      'due-date' => $task_date
+    )
+  );
+  $json = json_encode($arr);
+  $channel = curl_init();
+  curl_setopt($channel, CURLOPT_URL, "https://{$company}.teamwork.com/todo_lists/{$task_list_id}/todo_items.json");
+  curl_setopt($channel, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($channel, CURLOPT_POST, 1);
+  curl_setopt($channel, CURLOPT_POSTFIELDS, $json);
+  curl_setopt($channel, CURLOPT_HTTPHEADER, array(
+    "Authorization: BASIC " . base64_encode($key . ":xxx") ,
+    "Content-type: application/json"
+  ));
+  curl_exec($channel);
+  curl_close($channel);
+  drupal_set_message(t('Your task has been added.'));
+} 
+
+function teamwork_views_api() {
+  return array(
+    'api' => 3,
+  );
+
+}

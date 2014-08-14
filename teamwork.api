@@ -1,0 +1,70 @@
+My Post
+
+<?php
+ 
+$company = "broadstreet";
+$key = "elvis437tide";
+$taskListId = 195589;
+$taskName = "This is an example task.";
+$taskDate = time();
+  
+ 
+$arr = array('todo-item' =>
+                array(  'content' => $taskName,
+                        'due-date' => date( 'Ymd', $taskDate ) ));
+ 
+$json = json_encode($arr);
+ 
+ 
+$channel = curl_init();
+ 
+curl_setopt( $channel, CURLOPT_URL,
+    "https://{$company}.teamwork.com/todo_lists/{$taskListId}/todo_items.json"
+);
+curl_setopt( $channel, CURLOPT_RETURNTRANSFER, 1 );
+curl_setopt( $channel, CURLOPT_POST, 1 );
+curl_setopt( $channel, CURLOPT_POSTFIELDS, $json );
+curl_setopt( $channel, CURLOPT_HTTPHEADER, array(
+    "Authorization: BASIC ". base64_encode( $key .":xxx" ),
+    "Content-type: application/json"
+));
+ 
+curl_exec ( $channel );
+  
+curl_close ( $channel );
+ 
+?>
+
+My Get
+
+<?php
+$company = "broadstreet";
+$key = "elvis437tide";
+$action = "projects.json";
+
+function fetchUrl($url){
+
+$channel = curl_init();
+ 
+curl_setopt( $channel, CURLOPT_URL, $url );
+curl_setopt( $channel, CURLOPT_RETURNTRANSFER, 1 );
+curl_setopt( $channel, CURLOPT_HTTPHEADER,
+    array( "Authorization: BASIC ". base64_encode( elvis437tide .":xxx" ))
+);
+ 
+$feedData = curl_exec ( $channel );
+ 
+curl_close ( $channel );
+
+ return $feedData;
+
+}
+
+$json_object = fetchUrl("https://broadstreet.teamwork.com/projects.json");
+
+$feedarray = json_decode($json_object, true);
+
+foreach($feedarray['projects'] as $project){
+	$output = "<h4>".$project['name']."</h4>";
+	echo $output;
+}

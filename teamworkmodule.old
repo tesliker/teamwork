@@ -1,0 +1,54 @@
+<?php
+
+function teamwork_menu() {
+  $items['admin/config/services/teamwork/addtask'] = array(
+    'title' => 'Add a Task',
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'teamwork_add_task',
+    'access arguments' => array(
+      'access content'
+    ) ,
+  );
+  return $items;
+ }
+ 
+ function teamwork_permission() {
+  return array(
+    'access content' => array(
+      'title' => t('Access My Page') ,
+      'description' => t('Access my page on my site') ,
+    ) ,
+  );
+}
+
+function teamwork_form($form, &$form_submit) {
+$result = drupal_http_request('https://elvis437tide@broadstreet.teamwork.com/people.json');
+//if (in_array( $result->code, array(200, 304))) {
+//  Use $result->data for the content
+//}
+//else {
+//  Error $result->code
+//}
+
+// Also you can see all content from $result with
+// if you had installed Devel Module and enable it
+// dsm($result)
+$real_response = json_decode($result->data,true);
+drupal_set_message('<pre>' . var_dump($real_response) . '</pre>');
+$form['tasklist'] = array(
+//	'#suffix' => '<div>'.var_dump($feed_array).'</div>',
+    '#title' => t('Task List') ,
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#description' => t('which tasklist?') ,
+    '#options' => array('hello' => 'hello',),
+  );
+return $form;
+}
+
+function teamwork_add_task() {
+  $build['teamwork_add_tasks'] = array(
+    'teamwork_page_form' => drupal_get_form('teamwork_form') ,
+  );
+  return $build;
+}
