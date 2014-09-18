@@ -172,8 +172,7 @@ $schema['teamwork_tasks'] = array(
     ),
     'completed' => array(
       'description' => 'TODO: please describe this field!',
-      'type' => 'varchar',
-      'length' => '32',
+      'type' => 'int',
       'not null' => FALSE,
     ),
     'start_date' => array(
@@ -207,8 +206,7 @@ $schema['teamwork_tasks'] = array(
     ),
     'timeIsLogged' => array(
       'description' => 'TODO: please describe this field!',
-      'type' => 'varchar',
-      'length' => '32',
+      'type' => 'int',
       'not null' => FALSE,
     ),
     'attachments_count' => array(
@@ -282,8 +280,7 @@ $schema['teamwork_tasklists'] = array(
     ),
     'private' => array(
       'description' => 'TODO: please describe this field!',
-      'type' => 'varchar',
-      'length' => '128',
+      'type' => 'int',
       'not null' => FALSE,
     ),
     'overdue_count' => array(
@@ -299,15 +296,13 @@ $schema['teamwork_tasklists'] = array(
     ),
     'pinned' => array(
       'description' => 'TODO: please describe this field!',
-      'type' => 'varchar',
+      'type' => 'int',
       'not null' => FALSE,
-	  'length' => '128',
     ),
     'tracked' => array(
       'description' => 'TODO: please describe this field!',
-      'type' => 'varchar',
+      'type' => 'int',
       'not null' => FALSE,
-	  'length' => '128',
     ),
     'id' => array(
       'description' => 'TODO: please describe this field!',
