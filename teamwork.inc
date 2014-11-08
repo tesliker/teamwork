@@ -48,7 +48,7 @@ function teamwork_tasks_refresh($action) {
 	 'comments_count' => $project['comments-count'],
 	 'description' => $project['description'],
 	 'content' => $project['content'],
-	 'private' => $project['private'],
+	 'private' => ($project['private'] == TRUE) ? 1 : 0,
 	 //'order' => $project['order'],
 	 'project_id' => $project['project-id'],
      'project_name' => $project['project-name'],
@@ -60,13 +60,13 @@ function teamwork_tasks_refresh($action) {
 	 'creator_id' => $project['creator-id'],
 	 'creator_firstname' => $project['creator-firstname'],
 	 'creator_lastname' => $project['creator-lastname'],
-	 'completed' => $project['completed'],
+	 'completed' => ($project['completed'] == TRUE) ? 1 : 0,
 	 'start_date' => $project['start-date'],
 	 'due_date' => $project['due-date'],
 	 'created_on' => $project['created-on'],
 	 'priority' => $project['priority'],
 	 'progress' => $project['progress'],
-	 'timeIsLogged' => $project['timeIsLogged'],
+	 'timeIsLogged' => ($project['timeIsLogged'] == TRUE) ? 1 : 0,
 	 'attachments_count' => $project['attachments-count'],
 	 //'responsible_party_id' => $project['responsible-party-id'],
 	 'responsible_party_firstname' => $project['responsible-party-firstname'],
@@ -85,7 +85,6 @@ function teamwork_tasklists_refresh($action) {
   $result = drupal_http_request('https://'.$key.'@'.$company.'.teamwork.com/'.$action."'");
  // $decode_feed = json_decode($result);
   $feed_array = json_decode($result->data, TRUE);
-
     foreach ($feed_array['todo-lists'] as $project) {
   $insert_people = db_merge('teamwork_tasklists');
   $insert_people
@@ -97,12 +96,12 @@ function teamwork_tasklists_refresh($action) {
 	 'description' => $project['description'],
 	 'milestone_id' => $project['milestone-id'],
 	 'uncompleted_count' => $project['uncompleted-count'],
-	 'complete' => $project['complete'],
-     'private' => $project['private'],
+	 'complete' => ($project['complete'] == TRUE) ? 1 : 0,
+     'private' => ($project['private'] == TRUE) ? 1 : 0,
 	 'overdue_count' => $project['overdue-count'],
 	 'project_name' => $project['project-name'],
-	 'pinned' => $project['pinned'],
-	 'tracked' => $project['tracked'],
+	 'pinned' => ($project['pinned'] == TRUE) ? 1 : 0,
+	 'tracked' => ($project['tracked'] == TRUE) ? 1 : 0,
 	 'id' => $project['id'],
 	 'position' => $project['position'],
      'completed_count' => $project['completed-count'],

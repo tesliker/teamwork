@@ -4,6 +4,7 @@
  * Implements hook_schema().
  */
 function teamwork_schema() {
+// implementing the teamwork_api table
 $schema['teamwork_api'] = array(
   'description' => 'The API key',
   'fields' => array(
@@ -28,6 +29,8 @@ $schema['teamwork_api'] = array(
     ),
   ),
 );
+
+// implementing the teamwork_people table
 $schema['teamwork_people'] = array(
   'description' => 'TODO: please describe this table!',
   'fields' => array(
@@ -73,6 +76,8 @@ $schema['teamwork_people'] = array(
     ),
   ),
 );
+
+// implementing the teamwork_tasks table
 $schema['teamwork_tasks'] = array(
   'description' => 'TODO: please describe this table!',
   'fields' => array(
@@ -105,7 +110,8 @@ $schema['teamwork_tasks'] = array(
     ),
     'private' => array(
       'description' => 'TODO: please describe this field!',
-      'type' => 'int',
+      'type' => 'varchar',
+	  'length' => '32',
       'not null' => FALSE,
     ),
     'order' => array(
@@ -173,7 +179,9 @@ $schema['teamwork_tasks'] = array(
     'completed' => array(
       'description' => 'TODO: please describe this field!',
       'type' => 'int',
-      'not null' => FALSE,
+	  'size' => 'tiny',
+      'not null' => TRUE,
+	  'default' => 1,
     ),
     'start_date' => array(
       'description' => 'TODO: please describe this field!',
@@ -207,7 +215,9 @@ $schema['teamwork_tasks'] = array(
     'timeIsLogged' => array(
       'description' => 'TODO: please describe this field!',
       'type' => 'int',
-      'not null' => FALSE,
+	  'size' => 'tiny',
+      'not null' => TRUE,
+	  'default' => 1,
     ),
     'attachments_count' => array(
       'description' => 'TODO: please describe this field!',
@@ -235,7 +245,7 @@ $schema['teamwork_tasks'] = array(
   ),
 );
 
-
+// implementing the teamwork_tasklists table
 $schema['teamwork_tasklists'] = array(
   'description' => 'TODO: please describe this table!',
   'fields' => array(
@@ -274,13 +284,15 @@ $schema['teamwork_tasklists'] = array(
     ),
     'complete' => array(
       'description' => 'TODO: please describe this field!',
-      'type' => 'varchar',
-      'length' => '128',
-      'not null' => FALSE,
+      'type' => 'int',
+	  'size' => 'tiny',
+      'not null' => TRUE,
+	  'default' => 1,
     ),
     'private' => array(
       'description' => 'TODO: please describe this field!',
-      'type' => 'int',
+      'type' => 'varchar',
+	  'length' => '32',
       'not null' => FALSE,
     ),
     'overdue_count' => array(
@@ -297,12 +309,16 @@ $schema['teamwork_tasklists'] = array(
     'pinned' => array(
       'description' => 'TODO: please describe this field!',
       'type' => 'int',
-      'not null' => FALSE,
+	  'size' => 'tiny',
+      'not null' => TRUE,
+	  'default' => 1,
     ),
     'tracked' => array(
       'description' => 'TODO: please describe this field!',
       'type' => 'int',
-      'not null' => FALSE,
+	  'size' => 'tiny',
+      'not null' => TRUE,
+	  'default' => 1,
     ),
     'id' => array(
       'description' => 'TODO: please describe this field!',
@@ -321,7 +337,6 @@ $schema['teamwork_tasklists'] = array(
     ),
   ),
 );
-
 
   return $schema;
 }

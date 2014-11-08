@@ -12,24 +12,21 @@
 function teamwork_views_data() {
 
  $table = array(
-    'teamwork_tasks' => array(  // teamwork_tasks table
+    'teamwork_tasks' => array(  // making the the teamwork_tasks data available for views
        'table' => array(
           'group' => 'Teamwork',
              'base' => array(
-               'field' => 'id',  //Primary key
+               'field' => 'id',
                'title' => 'Teamwork Tasks',
                'help' => 'Teamwork database table'
             )
         ),
-     //Description of mydons_custom_id
         'id' => array(  
            'title' => t('Id'),
-           'help' => t('Teamwork task  Id field'),
-           // is mydons_custom_id field sortable TRUE
+           'help' => t('Teamwork task Id field'),
            'field' => array(
               'click sortable' => TRUE,  
-            ),
-      //Filter handler for filtering records by mydons_custom_id     
+            ),   
            'filter' => array(
                'handler' => 'views_handler_filter_numeric'   
             ),  
@@ -38,7 +35,6 @@ function teamwork_views_data() {
               'handler' => 'views_handler_sort'       
            )
          ),
-      //Description of mydons_custom_title field
         'project_name' => array(      
            'title' => t('Project'),
            'help' => t('Teamwork Project Name Field'),
@@ -53,7 +49,6 @@ function teamwork_views_data() {
               'handler' => 'views_handler_sort'
            )
         ),
-     //Description of mydons_custom_body field
        'content' => array(           
            'title' => t('Content'),
            'help' => t('Teamwork Task Content'),
@@ -183,7 +178,7 @@ function teamwork_views_data() {
               'click sortable' => TRUE,
            ),
            'filter' => array(
-              'handler' => 'views_handler_filter_string'
+              'handler' => 'views_handler_filter_boolean_operator'
            ),
 
            'sort' => array(
@@ -253,7 +248,7 @@ function teamwork_views_data() {
               'click sortable' => TRUE,
            ),
            'filter' => array(
-              'handler' => 'views_handler_filter_string'
+              'handler' => 'views_handler_filter_boolean_operator'
            ),
 
            'sort' => array(

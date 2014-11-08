@@ -3,9 +3,11 @@
  * @file
  * Teamwork primary module file.
  */
+ 
 /**
  * Implements hook_menu().
  */
+ 
 function teamwork_menu() {
   $items['admin/config/services/teamwork'] = array(
     'title' => 'Teamwork',
@@ -42,7 +44,9 @@ function teamwork_menu() {
   return $items;
 }
 
-
+/**
+ * Implements hook_permission().
+ */ 
 
 function teamwork_permission() {
   return array(
@@ -52,9 +56,11 @@ function teamwork_permission() {
     ) ,
   );
 }
+
 /*
-* Page callback to menu item to add a task.
+* Page callback for menu item to add a task.
 */
+
 function teamwork_admin_page() {
   $build['teamwork_admin_form'] = array(
     'teamwork_admin_page' => drupal_get_form('teamwork_admin_form') ,
@@ -65,8 +71,20 @@ function teamwork_admin_page() {
 
 
 function teamwork_admin_form ($form, &$form_state) {
-  //$teamwork_schema = drupal_get_schema('teamwork_api');
   global $user;
+  $action = 'people.json';
+  $key = db_query('SELECT api_key FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
+  $company = db_query('SELECT company_name FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
+  $result = drupal_http_request('https://'.$key.'@'.$company.'.teamwork.com/'.$action."'");
+  $feed_array = json_decode($result->data, TRUE);
+  if (is_array($feed_array)) {
+    drupal_set_message('Your key has been successfully verified');  
+  }
+  else {
+    drupal_set_message('Your key was unable to be verified. Please check your information and make sure it is correct.', 'error');
+  }
+  
+  
   $api_key = db_query('SELECT api_key FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
   $company_name = db_query('SELECT company_name FROM {teamwork_api} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
   $form = array();
